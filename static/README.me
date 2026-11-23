@@ -1,0 +1,173 @@
+# 🔍 Python Domain-Based Search Engine
+
+## 📌 Overview
+
+This project is a **Python Domain-Based Search Engine** that provides intelligent answers specifically for Python-related queries.
+It uses a **local Large Language Model (LLM)** to generate dynamic responses instead of relying on pre-stored data.
+
+---
+
+## 🎯 Objective
+
+* Build a search engine focused only on Python concepts
+* Provide accurate and simple explanations
+* Avoid irrelevant queries
+* Use AI without any external API cost
+
+---
+
+## 🚀 Features
+
+* ✅ Domain-specific query filtering (Python only)
+* 🤖 AI-powered dynamic responses
+* ⚡ Lightweight and cost-free (no API key required)
+* 🎨 Clean and user-friendly interface
+* 💬 Typing animation for responses (ChatGPT-like)
+
+---
+
+## 🛠️ Technologies Used
+
+* **Python** – Core programming language
+* **Flask** – Backend framework
+* **HTML & CSS** – Frontend design
+* **Ollama** – Local AI runtime
+* **LLM Model (phi3)** – Response generation
+
+---
+
+## ⚙️ System Architecture
+
+User Input → Flask Backend → Query Validation → AI Model (Ollama) → Response → UI Display
+
+---
+
+## 🔄 Workflow
+
+1. User enters a query in the search bar
+2. Flask receives and processes the request
+3. Query is validated to ensure it is Python-related
+4. Query is enhanced for better understanding
+5. Request is sent to the local AI model via HTTP API
+6. AI generates a response
+7. Result is displayed on the user interface
+
+---
+
+## 🔌 How It Works (AI Integration)
+
+* The system uses **Ollama** to run the LLM locally
+
+* Flask sends a **POST request** to:
+
+  http://localhost:11434/api/generate
+
+* The AI model processes the prompt and returns a response
+
+* No API key is required because the model runs locally
+
+---
+
+## 📂 Project Structure
+
+```
+project/
+│
+├── app.py               # Backend logic (Flask)
+├── templates/
+│   └── index.html      # Frontend UI
+├── static/             # CSS (optional)
+└── README.md
+```
+
+---
+
+## ▶️ Installation & Setup
+
+### 1. Clone the repository
+
+```
+git clone <your-repo-link>
+cd project
+```
+
+### 2. Install dependencies
+
+```
+pip install flask requests
+```
+
+### 3. Install Ollama
+
+Download and install from: https://ollama.com
+
+### 4. Run AI model
+
+```
+ollama run phi3
+```
+
+### 5. Run the application
+
+```
+python app.py
+```
+
+### 6. Open in browser
+
+```
+http://127.0.0.1:5000/
+```
+
+---
+
+## 🧪 Example Queries
+
+### ✅ Valid Queries
+
+* What is list in Python?
+* Explain recursion
+* String methods
+
+### ❌ Invalid Queries
+
+* What is Java?
+* History of India
+* Random text
+
+---
+
+## ⚠️ Limitations
+
+* ⏳ Slower response time due to local AI processing
+* 💾 Requires model download (~2–4 GB)
+* 🔍 Limited to Python domain
+
+---
+
+## 🔮 Future Enhancements
+
+* ⚡ Faster AI models or GPU support
+* 🌐 Cloud deployment for better accessibility
+* 🎤 Voice-based search
+* 🔍 Auto-suggestions and query correction
+
+---
+
+## 🎯 Conclusion
+
+This project demonstrates how a **domain-specific AI search engine** can be built using local resources without relying on paid APIs. It highlights the balance between **cost, performance, and intelligence** in modern AI applications.
+
+---
+
+## 🙌 Acknowledgement
+
+* Flask Documentation
+* Ollama Documentation
+* Open-source AI models
+
+---
+
+## 📬 Contact
+
+For any queries or suggestions, feel free to reach out.

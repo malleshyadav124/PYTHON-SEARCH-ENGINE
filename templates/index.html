@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Python Search Engine</title>
+
+    <!-- Markdown Renderer -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+
+    <style>
+
+        /* ------------------------------------------
+           Global
+        ------------------------------------------ */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+
+            color: white;
+
+            min-height: 100vh;
+        }
+
+
+        /* ------------------------------------------
+           Main Container
+        ------------------------------------------ */
+
+        .container {
+
+            width: 65%;
+
+            max-width: 1000px;
+
+            margin: auto;
+
+            text-align: center;
+
+            padding-top: 100px;
+
+            padding-bottom: 50px;
+        }
+
+
+        /* ------------------------------------------
+           Title
+        ------------------------------------------ */
+
+        .title {
+
+            font-size: 48px;
+
+            font-weight: bold;
+
+            margin-bottom: 35px;
+        }
+
+        .title span {
+
+            color: #22c55e;
+        }
+
+
+        /* ------------------------------------------
+           Search Box
+        ------------------------------------------ */
+
+        .search-box {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            width: 100%;
+        }
+
+
+        input[type="text"] {
+
+            width: 75%;
+
+            padding: 15px 20px;
+
+            border-radius: 30px;
+
+            border: none;
+
+            outline: none;
+
+            font-size: 16px;
+        }
+
+
+        input[type="text"]:focus {
+
+            box-shadow:
+                0 0 0 3px
+                rgba(34, 197, 94, 0.3);
+        }
+
+
+        /* ------------------------------------------
+           Search Button
+        ------------------------------------------ */
+
+        button {
+
+            padding: 14px 25px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: #22c55e;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+
+        button:hover {
+
+            background: #16a34a;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* ------------------------------------------
+           Loading
+        ------------------------------------------ */
+
+        #loader {
+
+            margin-top: 20px;
+
+            color: #94a3b8;
+
+            font-size: 15px;
+        }
+
+
+        /* ------------------------------------------
+           Result Box
+        ------------------------------------------ */
+
+        .result-box {
+
+            margin-top: 40px;
+
+            text-align: left;
+
+            background: #f8fafc;
+
+            color: #0f172a;
+
+            padding: 30px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 0 20px
+                rgba(0, 0, 0, 0.3);
+
+            line-height: 1.7;
+
+            font-size: 16px;
+
+            overflow-x: auto;
+        }
+
+
+        /* ------------------------------------------
+           Headings
+        ------------------------------------------ */
+
+        .result-box h1,
+        .result-box h2,
+        .result-box h3 {
+
+            color: #16a34a;
+
+            margin-top: 22px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .result-box h3:first-child {
+
+            margin-top: 0;
+        }
+
+
+        /* ------------------------------------------
+           Paragraphs
+        ------------------------------------------ */
+
+        .result-box p {
+
+            margin: 10px 0;
+        }
+
+
+        /* ------------------------------------------
+           Lists
+        ------------------------------------------ */
+
+        .result-box ul {
+
+            padding-left: 25px;
+
+            margin-top: 10px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .result-box li {
+
+            margin-bottom: 6px;
+        }
+
+
+        /* ------------------------------------------
+           Tables
+        ------------------------------------------ */
+
+        .result-box table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin: 20px 0;
+
+            background: white;
+
+            font-size: 15px;
+        }
+
+
+        .result-box th,
+        .result-box td {
+
+            border: 1px solid #cbd5e1;
+
+            padding: 10px 12px;
+
+            text-align: left;
+
+            vertical-align: top;
+        }
+
+
+        .result-box th {
+
+            background: #e2e8f0;
+
+            font-weight: bold;
+        }
+
+
+        .result-box tr:nth-child(even) {
+
+            background: #f8fafc;
+        }
+
+
+        /* ------------------------------------------
+           Inline Code
+        ------------------------------------------ */
+
+        .result-box code {
+
+            background: #e2e8f0;
+
+            color: #0f172a;
+
+            padding: 3px 6px;
+
+            border-radius: 5px;
+
+            font-family: Consolas, monospace;
+        }
+
+
+        /* ------------------------------------------
+           Code Blocks
+        ------------------------------------------ */
+
+        .result-box pre {
+
+            background: #0f172a;
+
+            color: white;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            overflow-x: auto;
+
+            margin: 15px 0;
+        }
+
+
+        .result-box pre code {
+
+            background: transparent;
+
+            color: white;
+
+            padding: 0;
+
+            font-family: Consolas, monospace;
+
+            font-size: 14px;
+        }
+
+
+        /* ------------------------------------------
+           Strong Text
+        ------------------------------------------ */
+
+        .result-box strong {
+
+            font-weight: bold;
+        }
+
+
+        /* ------------------------------------------
+           Links
+        ------------------------------------------ */
+
+        .result-box a {
+
+            color: #16a34a;
+
+            text-decoration: none;
+        }
+
+
+        .result-box a:hover {
+
+            text-decoration: underline;
+        }
+
+
+        /* ------------------------------------------
+           Footer
+        ------------------------------------------ */
+
+        .footer {
+
+            margin-top: 60px;
+
+            font-size: 14px;
+
+            color: #94a3b8;
+        }
+
+
+        /* ------------------------------------------
+           Mobile Responsive
+        ------------------------------------------ */
+
+        @media (max-width: 768px) {
+
+            .container {
+
+                width: 90%;
+
+                padding-top: 70px;
+            }
+
+
+            .title {
+
+                font-size: 36px;
+            }
+
+
+            .search-box {
+
+                flex-direction: column;
+            }
+
+
+            input[type="text"] {
+
+                width: 100%;
+            }
+
+
+            button {
+
+                width: 100%;
+            }
+
+
+            .result-box {
+
+                padding: 20px;
+
+                font-size: 15px;
+            }
+
+
+            .result-box table {
+
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="container">
+
+
+        <!-- ---------------------------------------
+             Title
+        ---------------------------------------- -->
+
+        <div class="title">
+
+            🔍 <span>Python</span> Search Engine
+
+        </div>
+
+
+        <!-- ---------------------------------------
+             Search Form
+        ---------------------------------------- -->
+
+        <form
+            method="POST"
+            class="search-box"
+            onsubmit="showLoader()"
+        >
+
+            <input
+                type="text"
+                name="query"
+                placeholder="Search Python concepts..."
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit">
+                Search
+            </button>
+
+        </form>
+
+
+        <!-- ---------------------------------------
+             Loading Message
+        ---------------------------------------- -->
+
+        <div
+            id="loader"
+            style="display:none;"
+        >
+
+            ⏳ Searching...
+
+        </div>
+
+
+        <!-- ---------------------------------------
+             AI Result
+        ---------------------------------------- -->
+
+        {% if result %}
+
+        <div class="result-box">
+
+            <div id="result"></div>
+
+        </div>
+
+
+        <script>
+
+            const markdown =
+                {{ result | tojson }};
+
+            document.getElementById("result").innerHTML =
+                marked.parse(markdown);
+
+        </script>
+
+        {% endif %}
+
+
+        <!-- ---------------------------------------
+             Footer
+        ---------------------------------------- -->
+
+        <div class="footer">
+
+            Smart Python Concept Explorer
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ---------------------------------------
+         Loading Script
+    ---------------------------------------- -->
+
+    <script>
+
+        function showLoader() {
+
+            document.getElementById("loader").style.display = "block";
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>
